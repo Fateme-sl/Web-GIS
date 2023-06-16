@@ -1,0 +1,111 @@
+html
+	{width:100%; height:100%; margin:0;}
+body
+	{width:100%; height:100%; margin:0; font-family:sans-serif;}
+#map
+	{position:absolute;width:100%; height:88%; margin:0;top:6%;}
+#beandeau
+	{position:absolute;width:100%; height:6%; background-image: url("nature.jpg"); margin:0;}
+#bas_page
+	{position:absolute;width:100%; height:6%; margin:0;background:rgba(150, 150, 150,0.1);top:94%;}
+#titreSite
+	{color:rgba(0,0,150, 1);font-weight:bold;font-size:18px;margin:0.5em;}
+#ButOutilsOn 
+	{position: absolute;top: 4em;left:9px;border-radius:4px;}	
+#ButOutilsOff 
+	{display:none;position: absolute;top: 4em;left:9px;border-radius:4px;}
+#barreOutil	
+	{display:none;position:absolute;top:7.2em; left:0.6em; padding:3px; border-radius:4px; color:#fff; background: rgba(150, 150, 150,0.3); z-index:100; width:2.6em;height:15em; }
+#BtZoomIn
+	{position: absolute;top: 0.5em;left:9px;}
+#BtZoomOut
+	{position: absolute;top: 3em;left:9px;}
+#BtZoomExt
+	{position: absolute;top: 5.5em;left:9px;}
+#BtFond
+	{position: absolute;top: 8em;left:9px;}	
+#BtLayers
+	{position: absolute;top: 10.5em;left:9px;}
+#BtMesure
+	{position: absolute;top: 13em;left:9px;}
+#BtSearch
+	{position: absolute;top: 15.5em;left:9px;}
+#BtDessin
+	{position: absolute;top: 18em;left:9px;}
+#BtExport
+	{position: absolute;top: 20.5em;left:9px;}
+#BtPrint
+	{position: absolute;top: 23em;left:9px;}
+.scale-line 
+	{position: absolute;bottom:9px;left:50%;}
+.ol-scale-line
+	{position: relative;bottom: 0px;left: 0px;}
+.mouse-positionGeo
+	{position: absolute;bottom:11px;left:35%;color:rgba(150,0,0, 1);font-weight:bold;font-size:10px;z-index:100;height:2em;width:12em;border-radius:4px;}
+.mouse-positionUTM
+	{position: absolute;bottom:11px;left:15%;color:rgba(0,0,150, 1);font-weight:bold;font-size:10px;z-index:100;height:2em;width:11em;border-radius:4px;}
+.ol-mouse-position
+	{position: relative;bottom: 20px;left:10px;}	
+#toolboxBaseMap
+	{display:none;position:absolute;top:4em; right:9px; padding:3px; border-radius:4px; color:#fff; background: rgba(255, 255, 255, 0.4); z-index:100; }
+#layerswitcherBaseMap
+	{margin:0; padding:10px; border-radius:4px; background:rgba(150, 150, 150,0.3); list-style-type:none; }
+#outil_mesure
+	{display:none;position: absolute;top: 20.4em;left:4em;background:rgba(150, 150, 150,0.3);height:1.3em;width:4.5em;border-radius:4px;padding:5px;}	
+#type	
+	{color:rgba(0,0,150, 1);font-weight:bold;}
+.tooltip 
+	{
+	position: relative;
+	background: rgba(0, 0, 0, 0.5);
+	border-radius: 4px;
+	color: white;
+	padding: 4px 8px;
+	opacity: 0.7;
+	white-space: nowrap;
+	}
+.tooltip-measure 
+	{
+	opacity: 1;
+	font-weight: bold;
+	font-size:10px;
+	}
+.tooltip-static 
+	{
+	background-color: #ffcc33;
+	color: black;
+	border: 1px solid white;
+	font-size:10px;
+	font-weight: bold;
+	}
+.tooltip-measure:before,.tooltip-static:before 
+	{
+	border-top: 6px solid rgba(0, 0, 0, 0.5);
+	border-right: 6px solid transparent;
+	border-left: 6px solid transparent;
+	content: "";
+	position: absolute;
+	bottom: -6px;
+	margin-left: -7px;
+	left: 50%;
+	}														
+.tooltip-static:before 
+	{
+	border-top-color: #ffcc33;
+	}	
+#outil_recherche
+	{display:none;position: absolute;top: 20.4em;left:4em;background:rgba(150, 150, 150,0.5);height:10.3em;width:19em;border-radius:4px;padding:5px;}
+.rech_Field
+	{width:17em;height:9em;border:solid 2px white;border-radius:4px;}
+	
+.tit_rech_rech_Field
+	{color: rgb(0,0,100); font-weight: bold;border:solid 2px white;padding-left: 20px; padding-right: 20px;border-radius: 4px;}
+#BarreCopyright
+	{position:absolute;width:20%; height:18px; margin:0;background:rgba(0, 60, 136, 0.3);bottom:8px;right:8px;border-radius:4px;}
+#textcopyright	
+	{color:rgba(0,0,0, 1);font-size:12px;}	
+	
+#toolboxCalques
+	{display:none;position:absolute;top:200px; right:8px; padding:3px; border-radius:4px; color:rgba(0,0,150, 1);font-weight:bold;font-size:12px; background: rgba(255, 255, 255, 0.4); z-index:100; }
+#layerswitcherCalques
+	{margin:0; padding:10px; border-radius:4px; background:rgba(150, 150, 150,0.5); list-style-type:none; }

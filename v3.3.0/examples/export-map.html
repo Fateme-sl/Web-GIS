@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="../css/ol.css" type="text/css">
+
+    <title>Export map example</title>
+ 
+  
+  <script type="text/javascript">
+  
+	var map;
+	function init()
+			{
+		map = new ol.Map({
+		  layers: [
+			new ol.layer.Tile({
+			  source: new ol.source.OSM()
+			}),
+			new ol.layer.Vector({
+			  source: new ol.source.GeoJSON({
+				projection: 'EPSG:3857',
+				url: 'data/geojson/countries.geojson'
+			  })
+			})
+		  ],
+		  target: 'map',
+		  controls: ol.control.defaults({
+			attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+			  collapsible: false
+			})
+		  }),
+		  view: new ol.View({
+			center: [0, 0],
+			zoom: 2
+		  })
+		});
+
+  
+  }
+  
+  </script>
+   </head>
+  <body onload="init();">
+
+  
+    <div class="container-fluid">
+
+      <div class="row-fluid">
+        <div class="span12">
+          <div id="map" class="map"></div>
+          <div id="no-download" class="alert alert-error" style="display: none">
+            This example requires a browser that supports the
+            <a href="http://caniuse.com/#feat=download">link download</a> attribute.
+          </div>
+          <a id="export-png" class="btn" download="map.png"><i class="icon-download"></i> Export PNG</a>
+        </div>
+      </div>
+    </div>
+
+    <script src="loader.js?id=export-map" type="text/javascript"></script>
+
+  </body>
+</html>

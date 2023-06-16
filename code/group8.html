@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+	<link rel="stylesheet" href="../v3.3.0/css/ol.css" type="text/css">
+	<link rel="stylesheet" href="css/site.css" type="text/css">
+	<script type="text/javascript" src="javascript/jquery-2.1.3.min.js"></script>
+	<script type="text/javascript" src="javascript/jquery-ui.js"></script>
+	<script type="text/javascript" src="javascript/fonction.js"></script>
+	<script src="../v3.3.0/build/ol.js" type="text/javascript"></script>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:600,700,800,900" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+	<title>Group 8</title>
+	<script type="text/javascript">
+
+	</script>
+	<script type="text/javascript">
+		var map;
+		var layers = [];
+		var layersPerso = [];
+		function init() {
+
+			/////////////////////////////////////// Fond Carto ///////////////////////////////////////
+			layers[0] = new ol.layer.Tile({ source: new ol.source.BingMaps({ key: 'AhoORAPFEOvh1KwnGZw5neMs-Ids3YZN6Lkenp4QNRo0v2fZ3nhinRrLK3oKNsCM', imagerySet: 'Aerial' }) });
+			layers[1] = new ol.layer.Tile({ source: new ol.source.BingMaps({ key: 'AhoORAPFEOvh1KwnGZw5neMs-Ids3YZN6Lkenp4QNRo0v2fZ3nhinRrLK3oKNsCM', imagerySet: 'AerialWithLabels' }) });
+			layers[2] = new ol.layer.Tile({ source: new ol.source.BingMaps({ key: 'AhoORAPFEOvh1KwnGZw5neMs-Ids3YZN6Lkenp4QNRo0v2fZ3nhinRrLK3oKNsCM', imagerySet: 'Road' }) });
+			layers[3] = new ol.layer.Tile({ source: new ol.source.OSM() });
+			layers[4] = new ol.layer.Tile({ source: new ol.source.Stamen({ layer: 'watercolor' }) });
+			layers[5] = new ol.layer.Tile({ source: new ol.source.Stamen({ layer: 'toner' }) });
+
+			/////////////////////////////////////// Map ///////////////////////////////////////
+			map = new ol.Map(
+				{
+					target: 'map',
+					controls: [],
+					view: new ol.View({
+						center: ol.proj.transform([10.15,45.9], 'EPSG:4326', 'EPSG:3857'),
+						zoom: 13
+					})
+				});
+			map.addLayer(layers[0]);
+			///////////////////////////////////////Contrôle defaut ol///////////////////////////////////////
+			map.addControl(new ol.control.ScaleLine({ units: 'metric', target: document.getElementById('scale-line') }));
+			map.addControl(new ol.control.OverviewMap());
+			var mousePositionControlGeo = new ol.control.MousePosition({
+				coordinateFormat: ol.coordinate.createStringXY(6),
+				projection: "EPSG:4326",
+				target: document.getElementById('coordGeo')
+			});
+			map.addControl(mousePositionControlGeo);
+
+			var mousePositionControlUTM = new ol.control.MousePosition({
+				coordinateFormat: ol.coordinate.createStringXY(0),
+				projection: "EPSG:32632",
+				target: document.getElementById('coordUTM')
+			});
+			map.addControl(mousePositionControlUTM);
+
+			///////////////////////////////////////Geoserver Data///////////////////////////////////////
+			layersPerso[0] = new ol.layer.Tile({
+			source: new ol.source.TileWMS({
+				crossOrigin : "Anonymous",
+				preload: Infinity,
+				url: 'https://www.gis-geoserver.polimi.it/geoserver/gisgeoserver_08/wms?',
+				serverType:'geoserver',
+				params:{
+					'LAYERS':"gisgeoserver_08:LandSlideSusceptibilityMap", 'TILED':true
+				}
+				})
+			});
+			map.addLayer(layersPerso[0]);
+			
+			
+			layersPerso[1] = new ol.layer.Tile({
+			source: new ol.source.TileWMS({
+				crossOrigin : "Anonymous",
+				preload: Infinity,
+				url: 'https://www.gis-geoserver.polimi.it/geoserver/gisgeoserver_08/wms?',
+				serverType:'geoserver',
+				params:{
+					'LAYERS':"gisgeoserver_08:LandSlideSusceptibilityMap_reclass", 'TILED':true
+				}
+				})
+			});
+			map.addLayer(layersPerso[1]);
+			
+			
+			layersPerso[2] = new ol.layer.Tile({
+			source: new ol.source.TileWMS({
+				crossOrigin : "Anonymous",
+				preload: Infinity,
+				url: 'https://www.gis-geoserver.polimi.it/geoserver/gisgeoserver_08/wms?',
+				serverType:'geoserver',
+				params:{
+					'LAYERS':"gisgeoserver_08:aspect", 'TILED':true
+				}
+				})
+			});
+			map.addLayer(layersPerso[2]);
+			
+			
+			layersPerso[3] = new ol.layer.Tile({
+			source: new ol.source.TileWMS({
+				crossOrigin : "Anonymous",
+				preload: Infinity,
+				url: 'https://www.gis-geoserver.polimi.it/geoserver/gisgeoserver_08/wms?',
+				serverType:'geoserver',
+				params:{
+					'LAYERS':"gisgeoserver_08:dtm", 'TILED':true
+				}
+				})
+			});
+			map.addLayer(layersPerso[3]);
+			
+			layersPerso[4] = new ol.layer.Tile({
+			source: new ol.source.TileWMS({
+				crossOrigin : "Anonymous",
+				preload: Infinity,
+				url: 'https://www.gis-geoserver.polimi.it/geoserver/gisgeoserver_08/wms?',
+				serverType:'geoserver',
+				params:{
+					'LAYERS':"gisgeoserver_08:dusaf", 'TILED':true
+				}
+				})
+			});
+			map.addLayer(layersPerso[4]);
+
+			layersPerso[5] = new ol.layer.Tile({
+			source: new ol.source.TileWMS({
+				crossOrigin : "Anonymous",
+				preload: Infinity,
+				url: 'https://www.gis-geoserver.polimi.it/geoserver/gisgeoserver_08/wms?',
+				serverType:'geoserver',
+				params:{
+					'LAYERS':"gisgeoserver_08:faults", 'TILED':true
+				}
+				})
+			});
+			map.addLayer(layersPerso[5]);
+
+			layersPerso[6] = new ol.layer.Tile({
+			source: new ol.source.TileWMS({
+				crossOrigin : "Anonymous",
+				preload: Infinity,
+				url: 'https://www.gis-geoserver.polimi.it/geoserver/gisgeoserver_08/wms?',
+				serverType:'geoserver',
+				params:{
+					'LAYERS':"gisgeoserver_08:ndvi", 'TILED':true
+				}
+				})
+			});
+			map.addLayer(layersPerso[6]);
+
+			layersPerso[7] = new ol.layer.Tile({
+			source: new ol.source.TileWMS({
+				crossOrigin : "Anonymous",
+				preload: Infinity,
+				url: 'https://www.gis-geoserver.polimi.it/geoserver/gisgeoserver_08/wms?',
+				serverType:'geoserver',
+				params:{
+					'LAYERS':"gisgeoserver_08:plan", 'TILED':true
+				}
+				})
+			});
+			map.addLayer(layersPerso[7]);
+
+
+			layersPerso[8] = new ol.layer.Tile({
+			source: new ol.source.TileWMS({
+				crossOrigin : "Anonymous",
+				preload: Infinity,
+				url: 'https://www.gis-geoserver.polimi.it/geoserver/gisgeoserver_08/wms?',
+				serverType:'geoserver',
+				params:{
+					'LAYERS':"gisgeoserver_08:rivers", 'TILED':true
+				}
+				})
+			});
+			map.addLayer(layersPerso[8]);
+
+			layersPerso[9] = new ol.layer.Tile({
+			source: new ol.source.TileWMS({
+				crossOrigin : "Anonymous",
+				preload: Infinity,
+				url: 'https://www.gis-geoserver.polimi.it/geoserver/gisgeoserver_08/wms?',
+				serverType:'geoserver',
+				params:{
+					'LAYERS':"gisgeoserver_08:roads", 'TILED':true
+				}
+				})
+			});
+			map.addLayer(layersPerso[9]);
+			
+			layersPerso[10] = new ol.layer.Tile({
+			source: new ol.source.TileWMS({
+				crossOrigin : "Anonymous",
+				preload: Infinity,
+				url: 'https://www.gis-geoserver.polimi.it/geoserver/gisgeoserver_08/wms?',
+				serverType:'geoserver',
+				params:{
+					'LAYERS':"	gisgeoserver_08:slope", 'TILED':true
+				}
+				})
+			});
+			map.addLayer(layersPerso[10]);
+
+			///////////////////////////////////////Measurement Tools///////////////////////////////////////
+
+			var source, vector;
+			var wgs84Sphere = new ol.Sphere(6378137);
+			var sketch;
+			var measureTooltipElement = document.createElement('div');
+			measureTooltipElement.className = 'tooltip tooltip-measure';
+			var measureTooltip;
+
+			/////////////////////////////////////////////////////////////
+			source = new ol.source.Vector();
+			vector = new ol.layer.Vector({
+				source: source,
+				style: new ol.style.Style(
+					{
+						fill: new ol.style.Fill({
+							color: 'rgba(255, 255, 255, 0.2)'
+						}),
+						stroke: new ol.style.Stroke({
+							color: '#ffcc33',
+							width: 2
+						}),
+						image: new ol.style.Circle({
+							radius: 7,
+							fill: new ol.style.Fill({
+								color: '#ffcc33'
+							})
+						})
+					})
+			});
+
+			map.addLayer(vector);
+
+
+			var pointerMoveHandler = function (evt) {
+				if (evt.dragging) {
+					return;
+				}
+				/** @type {string} */
+				/** @type {ol.Coordinate|undefined} */
+				var tooltipCoord = evt.coordinate;
+
+				if (sketch) {
+					var output;
+					var geom = (sketch.getGeometry());
+					if (geom instanceof ol.geom.Polygon) {
+						output = formatArea(/** @type {ol.geom.Polygon} */(geom));
+						tooltipCoord = geom.getInteriorPoint().getCoordinates();
+					} else if (geom instanceof ol.geom.LineString) {
+						output = formatLength( /** @type {ol.geom.LineString} */(geom));
+						tooltipCoord = geom.getLastCoordinate();
+					}
+					measureTooltipElement.innerHTML = output;
+					measureTooltip.setPosition(tooltipCoord);
+				}
+
+
+			};
+
+
+			map.on('pointermove', pointerMoveHandler);
+
+
+			///////////////////////////////////////////////////////////////////////////////////////
+			measureTooltip = new ol.Overlay({
+				element: measureTooltipElement,
+				offset: [0, -15],
+				positioning: 'bottom-center'
+			});
+			map.addOverlay(measureTooltip);
+
+
+			///////////////////////////////////////////////////////////////////////////////////////
+
+			var typeSelect = document.getElementById('type');
+
+			var draw; // global so we can remove it later
+			function addInteraction() {
+				var type = (typeSelect.value == 'area' ? 'Polygon' : 'LineString');
+				draw = new ol.interaction.Draw({
+					source: source,
+					type: /** @type {ol.geom.GeometryType} */ (type),
+					style: new ol.style.Style({
+						fill: new ol.style.Fill({
+							color: 'rgba(255, 255, 255, 0.2)'
+						}),
+						stroke: new ol.style.Stroke({
+							color: 'rgba(0, 0, 0, 0.5)',
+							lineDash: [10, 10],
+							width: 2
+						}),
+						image: new ol.style.Circle({
+							radius: 5,
+							stroke: new ol.style.Stroke({
+								color: 'rgba(0, 0, 0, 0.7)'
+							}),
+							fill: new ol.style.Fill({
+								color: 'rgba(255, 255, 255, 0.2)'
+							})
+						})
+					})
+				});
+				map.addInteraction(draw);
+
+				draw.on('drawstart',
+					function (evt) {
+						measureTooltipElement.className = 'tooltip tooltip-measure';
+						// set sketch
+						source.clear();
+						sketch = evt.feature;
+					}, this);
+
+				draw.on('drawend',
+					function (evt) {
+						measureTooltipElement.className = 'tooltip tooltip-static';
+						measureTooltip.setOffset([0, -7]);
+						sketch = null;
+					}, this);
+			}
+
+
+			/**
+			 * Let user change the geometry type.
+			 * @param {Event} e Change event.
+			 */
+			typeSelect.onchange = function (e) {
+				if (typeSelect.value == 'pan') {
+					source.clear();
+					map.removeInteraction(draw);
+					map.removeOverlay(measureTooltip);
+				}
+				else {
+					map.removeOverlay(measureTooltip);
+					map.addOverlay(measureTooltip);
+					source.clear();
+					map.removeInteraction(draw);
+					addInteraction();
+				}
+			};
+
+
+
+			/**
+			 * format length output
+			 * @param {ol.geom.LineString} line
+			 * @return {string}
+			 */
+			var formatLength = function (line) {
+				var length = Math.round(line.getLength() * 100) / 100;
+				var output;
+				if (length > 100) {
+					output = (Math.round(length / 1000 * 100) / 100) +
+						' ' + 'km';
+				} else {
+					output = (Math.round(length * 100) / 100) +
+						' ' + 'm';
+				}
+				return output;
+			};
+
+
+			/**
+			 * format length output
+			 * @param {ol.geom.Polygon} polygon
+			 * @return {string}
+			 */
+			var formatArea = function (polygon) {
+				var area = polygon.getArea();
+				var output;
+				if (area > 10000) {
+					output = (Math.round(area / 1000000 * 100) / 100) +
+						' ' + 'km<sup>2</sup>';
+				} else {
+					output = (Math.round(area * 100) / 100) +
+						' ' + 'm<sup>2</sup>';
+				}
+				return output;
+			};
+
+
+
+		}
+	</script>
+	<style>
+		.header {
+			background-image: url('img/bg1.jpg');
+
+		}
+
+		#map {
+			position: relative !important;
+			margin-top: 126px;
+		}
+
+		#ButOutilsOn {
+			position: relative !important;
+		}
+
+		#bas_page {
+			position: relative o !important;
+		}
+
+		.hader-content {
+			color: #ffffff;
+			/* padding: 150px 255px; */
+			text-align: center;
+			padding-top: 100px;
+			padding: 190px 260px;
+		}
+
+		.avant-titre {
+			color: #FFDA0F;
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+
+		.Go-to-read {
+			background-color: #FFDA0F;
+			color: #000;
+			border-radius: 25px;
+			padding: 12px 25px;
+			border: none;
+			font-size: 18px;
+			margin-top: 60px;
+			cursor: pointer;
+			transition: 0.3s;
+		}
+
+		.Go-to-read:hover {
+			background-color: #a18a10;
+			color: #fff;
+			transition: 0.3s;
+		}
+
+		.titre-header {
+			font-size: 48px;
+			line-height: 48px;
+		}
+
+		.sous-titre-header {
+			font-size: 24px;
+		}
+
+		.top {
+			position: absolute;
+			top: 30px;
+			display: flex;
+			left: 20px;
+
+		}
+
+		.serach {
+			position: absolute;
+			top: 30px;
+			right: 20px;
+			width: 200px;
+			background-color: transparent;
+
+		}
+
+		.serach input {
+			background-color: #fff;
+
+			background-image: url(img/search.png);
+
+
+			background-repeat: no-repeat;
+			color: #fff;
+			background-position: left;
+			padding-left: 30px;
+			background-size: 25px;
+
+		}
+
+		input::placeholder {
+			color: red;
+		}
+
+		.sous-header {
+			background-color: #0e3500;
+			padding: 100px 0px;
+			color: #fff;
+		}
+
+		.image-sous-header img {
+			width: 450px;
+			margin-left: 75px;
+			border: 5px solid #fff;
+		}
+
+		.color-yellow {
+			color: #FFDA0F;
+			font-size: 42px;
+			background-image: url(img/line1.png);
+			background-repeat: no-repeat;
+			background-position: 0 48px;
+			background-size: 100% 14%;
+
+		}
+
+		.title-sous-header {
+			font-size: 42px;
+			margin-bottom: 20px;
+		}
+
+		.card {
+			width: 300px;
+			background-color: #fff;
+			border-radius: 8px;
+			padding: 10px;
+			padding: 0;
+			transition: 0.3s;
+		}
+
+		.card:hover {
+			box-shadow: 0px 4px 15px -3px rgba(0, 0, 0, 0.39);
+			transition: 0.3s;
+		}
+
+		.card img {
+			width: 100%;
+			height: auto;
+			border-top-left-radius: 8px;
+			border-top-right-radius: 8px;
+		}
+
+		.card-content {
+			padding: 10px;
+		}
+
+		.card-title {
+			font-size: 20px;
+			font-weight: bold;
+			margin: 0;
+		}
+
+		.card-body {
+			margin: 0;
+		}
+
+		.card img {
+			max-height: 175px;
+		}
+
+		.cards-bloc {
+			margin-top: -50px;
+		}
+
+		#titreSite {
+			margin-top: 100px;
+		}
+
+
+		.footer {
+			background-color: #0e3500;
+			color: #fff;
+			display: flex;
+			padding: 25px;
+			text-align: right;
+			/* display: block; */
+			justify-content: end;
+		}
+	</style>
+</head>
+
+<body onload="init();">
+	<div class="header">
+
+		<div class="hader-content">
+
+			<div class="top">
+				<span class="material-symbols-outlined mr-2 ml-4">
+					call
+				</span> +39 02 23991
+				<span class="material-symbols-outlined mr-2  ml-4">
+					mail
+				</span> politecnicodimilano@mail.it
+				<span class="material-symbols-outlined  mr-2  ml-4">
+					share_location
+				</span>Piazza Leonardo da Vinci-Milano 
+			</div>
+			<div class="serach">
+				<div class="input-group rounded">
+					<input clas="myinput" type="search" class="form-control rounded" placeholder="Search"
+						aria-label="Search" aria-describedby="search-addon" />
+
+				</div>
+			</div>
+
+			<div class="avant-titre">
+				Geo-Informatics Engineering 2022-2023
+			</div>
+			<div class="titre-header">
+				Landslide Susceptibilty Map 
+			</div>
+			<div class="sous-titre-header mt-4">
+				Landslides are considered to be the most damaging geological hazard in mountainous regions 
+			</div>
+
+			<div>
+				<button class="Go-to-read"> Go to read</button>
+			</div>
+		</div>
+
+	</div>
+	<div class="sous-header">
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col-6 my-auto">
+					<div class="title-sous-header">
+						Let's Join To Build The Better World <sapn class="color-yellow">together</sapn>
+					</div>
+					<div class="tex-sous-header">
+						The result of our work is the LandSlide Susceptibility map as shown in the layers.
+in this map we see the landslide prone areas with red color.in these areas people are in higher risk of landslide and they are in danger.
+We classified this map into 4 classes with low, medium, high ,and very high possibility of landslide, showing how many people are in each class of landslide.
+4 classes with low, medium, high ,and very high possibility of landslide.
+					</div>
+				</div>
+				<div class="col-6">
+					<div class="image-sous-header">
+						<img src="img/chart.jpg" alt="">
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="container">
+		<div class="cards-bloc">
+
+
+			<div class="row">
+				<div class="col-4">
+					<div class="card d-flex">
+						<img src="img/nature.jpg" alt="Card Image">
+						<div class="card-content">
+							<h2 class="card-title">Digital Terrain Model</h2>
+							<p class="card-body">Digital Elevation model (DEM) or digital surface model (DSM) is a 3D computer graphics representation of elevation data to represent terrain or overlaying objects, commonly of a planet, moon, or asteroid. A "global DEM" refers to a discrete global grid. DEMs are used often in geographic information systems (GIS), and are the most common basis for digitally produced relief maps. A digital terrain model (DTM) represents specifically the ground surface while DEM and DSM may represent tree top canopy or building roofs.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="card d-flex">
+						<img src="img/1.jpg" alt="Card Image">
+						<div class="card-content">
+							<h2 class="card-title">NDVI</h2>
+							<p class="card-body">The normalized difference vegetation index (NDVI) is a widely-used metric for quantifying the health and density of vegetation using sensor data. It is calculated from spectrometric data at two specific bands: red and near-infrared. The spectrometric data is usually sourced from remote sensors, such as satellites.</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="card d-flex">
+						<img src="img/4.jpg" alt="Card Image">
+						<div class="card-content">
+							<h2 class="card-title">Aspect</h2>
+							<p class="card-body">When the terrain is flat, there is no slope. So this also means that there is no aspect.
+
+But in the mountains, there are slopes in all directions. There are north-facing, west-facing, south-facing, and east-facing slopes. The compass direction that the slope faces is aspect.
+
+…And there are some unique real-world applications of aspect:
+
+Farmers seed crops depending on the amount of incoming solar radiation and aspect data.
+Ecologists study microclimate for biodiversity.
+And even recreational planners study slope direction to prevent avalanches.²</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="beandeau">
+		<p id="titreSite" align=center>Landslide Susceptibility Map</p>
+	</div>
+	<div id="map" class="map"></div>
+	<div id="scale-line" class="scale-line"></div>
+	<div id="coordGeo" class="mouse-positionGeo"></div>
+	<div id="coordUTM" class="mouse-positionUTM"></div>
+	<img id="ButOutilsOff" src="img/outilsOff.png" />
+	<img id="ButOutilsOn" src="img/outilsOn.png" />
+	<div id="barreOutil">
+		<img id="BtZoomIn" onclick="map.getView().setZoom(map.getView().getZoom() + 1);" src="img/zoom+.png" />
+		<img id="BtZoomOut" onclick="map.getView().setZoom(map.getView().getZoom() - 1);" src="img/zoom-.png" />
+		<img id="BtZoomExt" onclick="zoomExtent()" src="img/zoome.png" />
+		<img id="BtFond" src="img/fond.png" />
+		<img id="BtLayers" src="img/layers.png" />
+		<img id="BtMesure" src="img/mesure.png" />
+
+	</div>
+	<div id="toolboxBaseMap">
+		<ul id="layerswitcherBaseMap">
+			<li><img name="layer" value="0" onClick="switchLayer(0);" src="img/bing_sat.jpg" /></li>
+			<li><img name="layer" value="0" onClick="switchLayer(1);" src="img/bing_sat_label.jpg" /></li>
+			<li><img name="layer" value="0" onClick="switchLayer(2);" src="img/bing_raod.jpg" /></li>
+			<li><img name="layer" value="0" onClick="switchLayer(4);" src="img/stamen_water.jpg" /></li>
+			<li><img name="layer" value="0" onClick="switchLayer(5);" src="img/stamen_toner.jpg" /></li>
+			<li><img name="layer" value="0" onClick="switchLayer(3);" src="img/temposm.jpg" /></li>
+		</ul>
+	</div>
+	<div id="toolboxCalques">
+		<ul id="layerswitcherCalques">
+			<li><label><input type="checkbox" id="LandSlideSusceptibilityMap" checked
+						onClick="afficheLayer(0,this.id);"> LandSlideSusceptibilityMap</label></li>
+			<input type="range" min="0" max="100" value="60" step="1" onchange="showValue(0,this.value)" />
+			<li><label><input type="checkbox" id="LandSlideSusceptibilityMap_reclass" checked
+						onClick="afficheLayer(1,this.id);">LandSlideSusceptibilityMap_reclass</label></li>
+			<input type="range" min="0" max="100" value="60" step="1" onchange="showValue(1,this.value)" />
+			<li><label><input type="checkbox" id="Aspect" checked onClick="afficheLayer(2,this.id);"> Aspect </label>
+			</li>
+			<input type="range" min="0" max="100" value="60" step="1" onchange="showValue(2,this.value)" />
+			<li><label><input type="checkbox" id="DTM" checked onClick="afficheLayer(3,this.id);"> DTM </label></li>
+			<input type="range" min="0" max="100" value="60" step="1" onchange="showValue(3,this.value)" />
+			<li><label><input type="checkbox" id="Dusaf" checked onClick="afficheLayer(4,this.id);"> Dusaf</label></li>
+			<input type="range" min="0" max="100" value="60" step="1" onchange="showValue(4,this.value)" />
+			<li><label><input type="checkbox" id="Faults" checked onClick="afficheLayer(5,this.id);"> Faults </label>
+			</li>
+			<input type="range" min="0" max="100" value="60" step="1" onchange="showValue(5,this.value)" />
+			<li><label><input type="checkbox" id="NDVI" checked onClick="afficheLayer(6,this.id);"> NDVI </label></li>
+			<input type="range" min="0" max="100" value="60" step="1" onchange="showValue(6,this.value)" />
+			<li><label><input type="checkbox" id="Plan" checked onClick="afficheLayer(7,this.id);"> Plan </label></li>
+			<input type="range" min="0" max="100" value="60" step="1" onchange="showValue(7,this.value)" />
+			<li><label><input type="checkbox" id="Rivers" checked onClick="afficheLayer(8,this.id);"> Rivers </label>
+			</li>
+			<input type="range" min="0" max="100" value="60" step="1" onchange="showValue(8,this.value)" />
+			<li><label><input type="checkbox" id="Road" checked onClick="afficheLayer(9,this.id);">Road </label></li>
+			<input type="range" min="0" max="100" value="60" step="1" onchange="showValue(9,this.value)" />
+			<li><label><input type="checkbox" id="Slope" checked onClick="afficheLayer(10,this.id);"> Slope </label>
+			</li>
+			<input type="range" min="0" max="100" value="60" step="1" onchange="showValue(10,this.value)" />
+
+		</ul>
+		</ul>
+		</ul>
+		</ul>
+		</ul>
+		</ul>
+		</ul>
+		</ul>
+	</div>
+	<div id="outil_mesure">
+		<select id="type">
+			<option value="pan">Pan</option>
+			<option value="length">Length</option>
+			<option value="area">Area</option>
+		</select>
+	</div>
+	<div id="outil_recherche">
+		<form method="post" action="recherche.php" target=map>
+			<fieldset class="rech_Field">
+				<legend class="tit_rech_rech_Field">Recherche</legend>
+				<table cellspacing=5>
+					<tr>
+						<td>Longitude(°) : </td>
+						<td><input type="text" name="long"></td>
+					</tr>
+					<td>Latitude(°) : </td>
+					<td><input type="text" name="lat"></td>
+					<tr>
+						<td>Rayon (km) : </td>
+						<td><input type="text" name="rayon"></td>
+					</tr>
+					<tr>
+						<td colspan=2 align="center"><input type="submit" value="Rechercher" class="btn"
+								onmouseover="this.className='btn btnhov'" onmouseout="this.className='btn'"></td>
+					</tr>
+				</table>
+			</fieldset>
+		</form>
+	</div>
+	<div id="bas_page">
+	</div>
+	<div id="BarreCopyright">Group 8</div>
+	<div class="footer">
+		<span class="material-symbols-outlined">
+			copyright
+		</span> Tous les drois est reserver
+	</div>
+</body>
+
+</html>
